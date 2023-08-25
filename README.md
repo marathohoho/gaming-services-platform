@@ -1,1 +1,1 @@
-Repo for test sd
+Simple monorepo app for tracking user wallet for gaming platform.
