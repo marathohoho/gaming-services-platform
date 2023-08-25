@@ -8,7 +8,7 @@ type UserWalletRequest struct {
 }
 
 type UserWallet struct {
-	Amount *float64 `json:"amount"`
+	Amount float64 `json:"amount"`
 }
 
 func (uwr *UserWalletRequest) ValidateUserWalletRequest() error {

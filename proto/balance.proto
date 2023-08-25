@@ -1,0 +1,18 @@
+// file: balance.proto
+syntax = "proto3";
+
+package balance_service;
+
+option go_package = "./proto";
+
+message RequestBalance {
+    string userId = 1;
+}
+
+message ResponseBalance {
+    double amount = 1;
+}
+
+service BalanceService {
+    rpc Get (RequestBalance) returns (ResponseBalance);
+}

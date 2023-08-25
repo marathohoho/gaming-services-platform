@@ -43,10 +43,10 @@ func (ws WalletService) DepositFunds() fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(models.NewGeneratedError(err.Error()))
 		}
 
-		if walletRetrieved.Amount == nil || req.Amount == nil {
+		if req.Amount == nil {
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(models.NewGeneratedError("unable to process the request"))
 		}
-		updatedAmount := *walletRetrieved.Amount + *req.Amount
+		updatedAmount := walletRetrieved.Amount + *req.Amount
 		updatedWallet := models.UserWalletRequest{
 			UserID: req.UserID,
 			Amount: &updatedAmount,
@@ -80,10 +80,10 @@ func (ws WalletService) WithdrawFunds() fiber.Handler {
 			return c.Status(fiber.StatusBadRequest).JSON(models.NewGeneratedError(err.Error()))
 		}
 
-		if walletRetrieved.Amount == nil || req.Amount == nil {
+		if req.Amount == nil {
 			return c.Status(fiber.StatusUnprocessableEntity).JSON(models.NewGeneratedError("unable to process the request"))
 		}
-		updatedAmount := *walletRetrieved.Amount - *req.Amount
+		updatedAmount := walletRetrieved.Amount - *req.Amount
 		if updatedAmount < 0 {
 			return c.Status(fiber.StatusBadRequest).JSON(models.NewGeneratedError("cannot withdraw from walledt due to negative generated balance"))
 		}

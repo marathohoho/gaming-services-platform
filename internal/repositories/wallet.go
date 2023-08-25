@@ -15,7 +15,7 @@ type WalletRepository struct {
 
 func (w WalletRepository) CreateOrUpdate(userWalletRequest models.UserWalletRequest) error {
 	walletRequestMarshalled, err := json.Marshal(models.UserWallet{
-		Amount: userWalletRequest.Amount,
+		Amount: *userWalletRequest.Amount,
 	})
 	if err != nil {
 		return err

@@ -37,7 +37,7 @@ func (us UserService) Create() fiber.Handler {
 			ID:    userId,
 			Email: req.Email,
 		}
-		return c.Status(fiber.StatusOK).JSON(createdUser)
+		return c.Status(fiber.StatusCreated).JSON(createdUser)
 	}
 }
 

@@ -30,6 +30,15 @@
             "program": "${workspaceFolder}/cmd/wallet",
             "env": {
               }
+        },
+        {
+            "name": "Launch GRPC",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/grpc",
+            "env": {
+              }
         }
     ]
 }

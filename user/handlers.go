@@ -24,6 +24,10 @@ func (h UserHandler) Register() fiber.Handler {
 		}
 
 		c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSON)
+
+		if response.StatusCode != fiber.StatusCreated {
+			return c.Status(response.StatusCode).Send(response.Body)
+		}
 		return c.Status(fiber.StatusCreated).Send(response.Body)
 	}
 }
@@ -43,7 +47,7 @@ func (h UserHandler) Get() fiber.Handler {
 		if response.StatusCode != fiber.StatusOK {
 			return c.Status(response.StatusCode).Send(response.Body)
 		}
-		return c.Status(fiber.StatusCreated).Send(response.Body)
+		return c.Status(fiber.StatusOK).Send(response.Body)
 	}
 }
 

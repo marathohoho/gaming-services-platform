@@ -3,16 +3,14 @@ package main
 import (
 	"context"
 	"gaming-services-platform/config"
+	"gaming-services-platform/grpc"
 	"gaming-services-platform/internal/repositories"
-	"gaming-services-platform/server"
-	"gaming-services-platform/wallet"
 
 	"github.com/go-redis/redis/v8"
 )
 
 func main() {
 	cfg := config.Init()
-	walletServer := server.Init()
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:       cfg.Redis.Addr,
@@ -21,11 +19,7 @@ func main() {
 	})
 
 	walletRepository := repositories.NewWalletRepository(context.Background(), rdb)
-	walletService := wallet.NewWalletService(rdb, walletRepository)
+	grpcService := grpc.NewGrpcService(rdb, walletRepository, cfg.GrpcServer)
 
-	walletServer.Post("/deposit", walletService.DepositFunds())
-	walletServer.Post("/withdraw", walletService.WithdrawFunds())
-
-	go server.Listen(walletServer, cfg.WalletServer)
-	server.Shutdown(walletServer, nil)
+	grpcService.ListenForConnection(context.Background())
 }

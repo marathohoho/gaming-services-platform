@@ -9,6 +9,7 @@ type PlatformConfig struct {
 	ApiServerHost string `env:"API_SERVER_HOST" env-default:"localhost:5100"`
 	UserServer    string `env:"USER_SERVER_HOST" env-default:"localhost:5101"`
 	WalletServer  string `env:"WALLET_SERVER_HOST" env-default:"localhost:5102"`
+	GrpcServer    string `env:"GRPC_SERVER_HOST" env-default:"localhost:5103"`
 
 	Redis struct {
 		Addr     string `env:"REDIS_ADDR" env-default:"localhost:6379"`
@@ -18,6 +19,7 @@ type PlatformConfig struct {
 
 	UserServerHost   string `env:"USER_SERVER_HOST" env-default:"http://localhost:5101"`
 	WalletServerHost string `env:"WALLET_SERVER_HOST" env-default:"http://localhost:5102"`
+	GrpcServerHost   string `env:"GRPC_SERVER_HOST" env-default:"http://localhost:5103"`
 }
 
 func Init() PlatformConfig {
