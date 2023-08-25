@@ -10,12 +10,6 @@ type PlatformConfig struct {
 	UserServer    string `env:"USER_SERVER_HOST" env-default:"localhost:5101"`
 	WalletServer  string `env:"WALLET_SERVER_HOST" env-default:"localhost:5102"`
 
-	DB struct {
-		User     string `env:"POSTGRES_USER" env-default:"postgres"`
-		Password string `env:"POSTGRES_PASSWORD" env-default:"postgres"`
-		Name     string `env:"POSTGRES_DB" env-default:"platform"`
-	}
-
 	Redis struct {
 		Addr     string `env:"REDIS_ADDR" env-default:"localhost:6379"`
 		Password string `env:"REDIS_PASSWORD" env-default:""`
