@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>PP - Websockets</title>
+</head>
+
+<body>
+    <div class="center">
+        <h1>Gaming Platform Statistics</h1>
+        <h3 id="game-header">Currently in the game event: Game progress</h3>
+
+        <!--
+        Here is a form that allows us to select what Game event to subscribe to
+        -->
+        <form id="game-event-selection">
+            <label for="game-event">Subscribe to a game event:</label>
+            <br>
+            <button type="submit" id="leaderboard-btn" name="leaderboard-btn" value="leaderboard-game-event">Leaderboard</button>
+            <button type="submit" id="gameprogress-btn" name="gameprogress-btn" value="gameprogress-event">Game progress</button>
+        </form>
+
+        <br>
+        <!--
+        Textarea to show game event stats
+        -->
+        <textarea class="messagearea" id="gamemessages" readonly name="gamemessages" rows="4" cols="50"
+            placeholder="Welcome to the game platform. Game messages will be shown here"></textarea>
+        <br>
+    </div>
+
+    <!--
+        Javascript that is used to Connect to Websocket and Handle New messages
+    -->
+    <script type="text/javascript">
+
+        // SelectedGameEvent is by default Game progress.
+        var SelectedGameEvent = "gameprogress-event";
+
+        /**
+         * Event is used to wrap all messages Send and Recieved
+         * on the Websocket
+         * */
+        class Event {
+            // Each Event needs a Type
+            // The payload is not required
+            constructor(type, payload) {
+                this.type = type;
+                this.payload = payload;
+            }
+        }
+        /**
+         * routeEvent is a proxy function that routes
+         * events into their correct Handler
+         * based on the type field
+         * */
+        function routeEvent(event) {
+
+            if (event.type === undefined) {
+                alert("no 'type' field in event");
+            }
+            switch (event.type) {
+                case "new_message":
+                    console.log("new message");
+                    const messageEvent = Object.assign(new NewMessageEvent, event.payload);
+                    appendGameEventMessage(messageEvent);
+                    break;
+                default:
+                    alert("unsupported message type");
+                    break;
+            }
+
+        }
+
+        /**
+         * NewMessageEvent is game event stats coming from backend
+         * */
+        class NewMessageEvent {
+            constructor(message, gameEvent, sent) {
+                this.message = message;
+                this.gameEvent = gameEvent;
+                this.sent = sent;
+            }
+        }
+        class ChangeGameEvent {
+            constructor(name) {
+                this.name = name;
+            }
+        }
+
+        /*
+        * Append a new game event
+        */
+        function appendGameEventMessage(messageEvent) {
+            console.log("appendGameEventMessage")
+            var date = new Date(messageEvent.sent);
+            // format message
+            const formattedMsg = `${date.toLocaleString()}: ${messageEvent.message}`;
+            // Append Message
+            textarea = document.getElementById("gamemessages");
+            textarea.innerHTML = textarea.innerHTML + "\n" + formattedMsg;
+            textarea.scrollTop = textarea.scrollHeight;
+            console.log(textarea)
+        }
+
+        /**
+         * changeGameEvent will update the value of Selectedgameevent
+         * and also notify the server that it changes the game event
+         * */
+         function changeGameEvent() {
+            // Change Header to reflect the changed game event
+            var newgame = document.getElementById("game-event-selection");
+            console.log(newgame)
+            if (newgame != null && newgame.value != SelectedGameEvent) {
+                header = document.getElementById("game-header").innerHTML = "Currently in game: " + SelectedGameEvent;
+
+                let changeGame = new ChangeGameEvent(SelectedGameEvent);
+                sendEvent("change_game", changeGame);
+                textarea = document.getElementById("gamemessages");
+                textarea.innerHTML = `You changed game to: ${SelectedGameEvent}`;
+                console.log(SelectedGameEvent)
+            }
+            return false;
+        }
+
+        /**
+         * sendEvent
+         * eventname - the event name to send on
+         * payload - the data payload
+         * */
+        function sendEvent(eventName, payload) {
+            // Create a event Object with a event named send_message
+            const event = new Event(eventName, payload);
+            // Format as JSON and send
+            conn.send(JSON.stringify(event));
+            console.log(event)
+        }
+        /**
+         * Once the website loads, we want to apply listeners and connect to websocket
+         * */
+        window.onload = function () {
+            // Apply our listener functions to the submit event on both forms
+            // we do it this way to avoid redirects
+            document.getElementById("game-event-selection").onsubmit = changeGameEvent;
+
+            const leaderboardButton = document.getElementById('leaderboard-btn');
+            const gameprogressButton = document.getElementById('gameprogress-btn');
+
+            // console.log(leaderboardButton, gameprogressButton)
+            // Add a click event listener to the submit button
+            leaderboardButton.addEventListener('click', function() {
+                // Get the value from the input field
+
+                console.log(leaderboardButton.value)
+                SelectedGameEvent = leaderboardButton.value;
+            });
+
+            gameprogressButton.addEventListener('click', function() {
+                // Get the value from the input field
+                console.log(gameprogressButton.value)
+
+                SelectedGameEvent = gameprogressButton.value;
+            });
+
+            // Check if the browser supports WebSocket
+            if (window["WebSocket"]) {
+                console.log("supports websockets");
+                // Connect to websocket
+                conn = new WebSocket("ws://" + document.location.host + "/ws");
+
+                // Add a listener to the onmessage event
+                conn.onmessage = function (evt) {
+                    console.log(evt);
+                    console.log("in onmessage")
+                    // parse websocket message as JSON
+                    const eventData = JSON.parse(evt.data);
+                    // Assign JSON data to new Event Object
+                    const event = Object.assign(new Event, eventData);
+                    // Let router manage message
+                    routeEvent(event);
+                }
+
+            } else {
+                alert("Not supporting websockets");
+            }
+        };
+    </script>
+
+    <style type="text/css">
+        body {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 133, 229, 0.969);
+        }
+
+        .center {
+            margin: auto;
+            width: 50%;
+            padding: 10px;
+        }
+    </style>
+
+</body>
+
+</html>

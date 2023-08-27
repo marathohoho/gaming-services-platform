@@ -6,12 +6,14 @@ import (
 	"gaming-services-platform/server"
 	"gaming-services-platform/user"
 	"gaming-services-platform/wallet"
+	"log"
 )
 
 func main() {
 	cfg := config.Init()
 	app := server.Init()
 	api := app.Group("/api")
+	log.Print("Started API server")
 
 	userHandler := user.NewUserHandler(cfg.UserServerHost)
 	walletHandler := wallet.NewWalletHandler(cfg.WalletServerHost)

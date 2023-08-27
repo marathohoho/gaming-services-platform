@@ -39,6 +39,15 @@
             "program": "${workspaceFolder}/cmd/grpc",
             "env": {
               }
+        },
+        {
+            "name": "Launch WEBSOCKET",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/websocket",
+            "env": {
+              }
         }
     ]
 }

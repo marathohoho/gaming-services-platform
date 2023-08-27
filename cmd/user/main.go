@@ -6,6 +6,7 @@ import (
 	"gaming-services-platform/internal/repositories"
 	"gaming-services-platform/server"
 	"gaming-services-platform/user"
+	"log"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -13,6 +14,7 @@ import (
 func main() {
 	cfg := config.Init()
 	userServer := server.Init()
+	log.Print("started user service")
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:       cfg.Redis.Addr,

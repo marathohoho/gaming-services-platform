@@ -6,10 +6,11 @@ import (
 )
 
 type PlatformConfig struct {
-	ApiServerHost string `env:"API_SERVER_HOST" env-default:"localhost:5100"`
-	UserServer    string `env:"USER_SERVER_HOST" env-default:"localhost:5101"`
-	WalletServer  string `env:"WALLET_SERVER_HOST" env-default:"localhost:5102"`
-	GrpcServer    string `env:"GRPC_SERVER_HOST" env-default:"localhost:5103"`
+	ApiServerHost   string `env:"API_SERVER" env-default:"localhost:5100"`
+	UserServer      string `env:"USER_SERVER" env-default:"localhost:5101"`
+	WalletServer    string `env:"WALLET_SERVER" env-default:"localhost:5102"`
+	GrpcServer      string `env:"GRPC_SERVER" env-default:"localhost:5103"`
+	WebsocketServer string `env:"WEBSOCKET_SERVER" env-default:"localhost:5104"`
 
 	Redis struct {
 		Addr     string `env:"REDIS_ADDR" env-default:"localhost:6379"`

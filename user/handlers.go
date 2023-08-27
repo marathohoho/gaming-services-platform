@@ -3,6 +3,7 @@ package user
 import (
 	"gaming-services-platform/internal"
 	"gaming-services-platform/internal/models"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,6 +16,7 @@ var generatedError *models.GeneratedError
 
 func (h UserHandler) Register() fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		log.Print("received request to create a new user")
 		reqPayload := c.Body()
 		url := h.UserHost + "/users"
 		response, err := internal.SendJsonRequest(fiber.MethodPost, url, reqPayload, nil)
@@ -28,6 +30,8 @@ func (h UserHandler) Register() fiber.Handler {
 		if response.StatusCode != fiber.StatusCreated {
 			return c.Status(response.StatusCode).Send(response.Body)
 		}
+
+		log.Print("created a new user: ", response.Body)
 		return c.Status(fiber.StatusCreated).Send(response.Body)
 	}
 }

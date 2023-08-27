@@ -6,6 +6,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gofiber/fiber/v2 v2.48.0
 	github.com/google/uuid v1.3.1
+	github.com/gorilla/websocket v1.5.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/rs/zerolog v1.30.0
 	google.golang.org/grpc v1.57.0

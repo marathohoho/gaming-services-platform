@@ -28,7 +28,6 @@ func CreateClientConnection(addr string) *grpc.ClientConn {
 func ListenForConnections(ctx context.Context, registrar ServiceRegistrar, addr, serviceName string) {
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		// logrus.Fatal(err)
 		return
 	}
 
@@ -37,19 +36,15 @@ func ListenForConnections(ctx context.Context, registrar ServiceRegistrar, addr,
 
 	registrar.RegisterGrpcServer(srv)
 
-	// logrus.Infof("%s listening...", serviceName)
-
 	go listenForStopped(ctx, srv, serviceName)
 
 	if err = srv.Serve(lis); err != nil {
-		// logrus.Fatal(err)
 		return
 	}
 }
 
 func listenForStopped(ctx context.Context, grpcServer *grpc.Server, serviceName string) {
 	defer func() {
-		// logrus.Infof("%s stopped", serviceName)
 	}()
 
 	for {

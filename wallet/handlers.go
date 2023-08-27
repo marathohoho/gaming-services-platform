@@ -3,6 +3,7 @@ package wallet
 import (
 	"gaming-services-platform/internal"
 	"gaming-services-platform/internal/models"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,6 +16,7 @@ var generatedError *models.GeneratedError
 
 func (w WalletHandler) Deposit() fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		log.Print("received a request for user balance deposit")
 		reqPayload := c.Body()
 		url := w.WalletHost + "/deposit"
 		response, err := internal.SendJsonRequest(fiber.MethodPost, url, reqPayload, nil)
@@ -34,6 +36,7 @@ func (w WalletHandler) Deposit() fiber.Handler {
 
 func (w WalletHandler) Withdraw() fiber.Handler {
 	return func(c *fiber.Ctx) error {
+		log.Print("received a request for user balance withdraw")
 		reqPayload := c.Body()
 		url := w.WalletHost + "/withdraw"
 		response, err := internal.SendJsonRequest(fiber.MethodPost, url, reqPayload, nil)
