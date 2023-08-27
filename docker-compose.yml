@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  websocket:
+    build:
+      context: .
+      dockerfile: cmd/websocket/Dockerfile
+    container_name: gaming-services-platform_websocket
+    ports:
+      - "5104:5104"
+    networks:
+      - gaming-services-platform
+      
+  api:
+    build:
+      context: .
+      dockerfile: cmd/api/Dockerfile
+    container_name: gaming-services-platform_api
+    ports:
+      - "5100:5100"
+    networks:
+      - gaming-services-platform
+
+  grpc:
+    build:
+      context: .
+      dockerfile: cmd/grpc/Dockerfile
+    container_name: gaming-services-platform_grpc
+    ports:
+      - "5103:5103"
+    depends_on:
+      - redis
+    networks:
+      - gaming-services-platform
+
+  user:
+    build:
+      context: .
+      dockerfile: cmd/user/Dockerfile
+    container_name: gaming-services-platform_user
+    ports:
+      - "5101:5101"
+    depends_on:
+      - redis
+    networks:
+      - gaming-services-platform
+
+  wallet:
+    build:
+      context: .
+      dockerfile: cmd/wallet/Dockerfile
+    container_name: gaming-services-platform_wallet
+    ports:
+      - "5102:5102"
+    depends_on:
+      - redis
+    networks:
+      - gaming-services-platform
+
+  redis:
+    image: redis:latest
+    container_name: gaming-services-platform_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - gaming-services-platform
+
+networks:
+  gaming-services-platform:
+    driver: bridge
